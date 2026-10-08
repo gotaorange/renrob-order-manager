@@ -8,3 +8,5 @@ __pycache__/
 test-results/
 *.log
 preview-dist/
+pages-redirect-dist/
+.cloud-source-*/

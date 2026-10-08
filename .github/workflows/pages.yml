@@ -1,4 +1,4 @@
-name: Publish interface preview
+name: Publish production site redirect
 
 on:
   push:
@@ -23,13 +23,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Build synthetic-data interface preview
-        run: python scripts/build_review.py
-      - name: Verify preview boundaries and rendering
-        run: node --test tests/test_review.mjs
+      - name: Build redirect to the live order system
+        run: python scripts/build_site_redirect.py
+      - name: Verify internal and factory destinations
+        run: node --test tests/test_site_redirect.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: preview-dist
+          path: pages-redirect-dist
 
   deploy:
     needs: build
@@ -41,6 +41,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy interface preview
+      - name: Deploy production site redirect
         id: deployment
         uses: actions/deploy-pages@v4

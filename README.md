@@ -1,8 +1,29 @@
 # Re:Nrob Lab 訂單管理
 
-管理新單、打樣、生產大貨與內部帳務。灣得入口為公開唯讀，內部管理必須登入。
+管理新單、打樣、生產大貨與內部帳務。正式版以雲端共用資料為主，Mac 另存單向同步副本。灣得入口為公開唯讀，內部管理必須登入。
 
-## 本機使用
+## 正式雲端入口
+
+- [內部訂單管理](https://renrob-lab-orders.kelly360753.chatgpt.site/)
+- [灣得／工廠唯讀入口](https://renrob-lab-orders.kelly360753.chatgpt.site/factory)
+
+正式系統支援登入、新增與編輯訂單、打樣及大貨進度、內部帳務、附件、報價 PDF 文字、PI 產生，以及 JSON 訂單備份。不同使用者同時編輯相同版本時會阻擋覆蓋並要求重新整理。
+
+訂單與設定保存在 Sites D1；附件與私有 PI 範本保存在 Sites R2。部署更新不依賴瀏覽器儲存，也不把訂單資料放進 GitHub。`cloud/` 是經白名單整理的雲端原始碼，部署設定與驗證方法見 `cloud/README.md`。
+
+GitHub Pages 是正式網站的導向入口。舊連結 `?view=factory` 或 `/factory` 會開啟正式工廠頁。
+
+## Mac 同步副本
+
+雙擊 `啟動同步.command`，立即由雲端下載訂單與附件，之後每 60 秒檢查。按 Control+C 停止；關閉同步視窗不影響雲端網站。
+
+同步建立「訂單號 代號」資料夾，以 SHA256 核對檔案。人工修改、同名不同內容及已刪除的本機檔案會受到保護；遇到雲端更新時另存版本，不覆蓋人工內容。雲端刪除也不會刪除 Mac 副本。Mac 修改不會反向上傳。
+
+後續新增訂單、編輯欄位與上傳附件，請在上方正式雲端網站完成。Mac 資料夾是下載備份；直接放進 Mac 資料夾的新檔案不會自動上傳。
+
+私有設定與同步紀錄位於 Git 已忽略的 `data/`，不得公開。第一次設定與衝突處理方式見 `雲端同步說明.txt`。只同步一次可執行 `python3 scripts/sync_cloud.py --once`。
+
+## 保留的本機版本
 
 雙擊 `start.command`，在瀏覽器開啟 http://127.0.0.1:8765 。
 
@@ -56,21 +77,27 @@ Excel 的數量、小計、稅金與總額使用公式，開啟檔案時由 Exce
 
 原始範本不包含在公開程式庫，買方、銀行資料與條款保存在本機私有設定中。重新部署時需自行配置範本與私有設定。
 
-## 上傳 GitHub 與公開上線
+## 原始碼與發布
 
-此程式庫可上傳至 `gotaorange` 的 GitHub。`data/`、附件、密碼、資料庫與個人檔案不可加入 Git。
+此程式庫保留原本 Python 本機版，並在 `cloud/` 保存正式雲端版原始碼。`data/`、附件、密碼、資料庫與個人檔案不可加入 Git。
 
-### 給同事檢視的介面預覽
+### 保留的虛構資料預覽工具
 
 執行 `python3 scripts/build_review.py` 會建立 `preview-dist/` 靜態預覽，僅包含介面和三筆虛構示範訂單。可切換內部介面及灣得可見範圍，檢視欄位、版面與流程；不連接真實資料、不儲存修改，也不會上傳文件、製作 PI 或變更密碼。
 
-GitHub Pages 工作流程會檢查並發布這個示範版本。配色為白底黑字、淺灰與黑色色塊，紅色只用於關鍵文字。GitHub 倉庫需將 Pages 的發布來源設為 GitHub Actions。
+此預覽工具供本機介面檢查。GitHub Pages 的正式工作流程改為發布 `scripts/build_site_redirect.py` 產生的小型導向頁；倉庫 Pages 發布來源為 GitHub Actions。
 
-### 正式訂單系統
+### 雲端原始碼整理
+
+完成雲端程式測試後，執行 `python3 scripts/mirror_cloud_source.py` 先檢查白名單；確認後加 `--write` 產生 `cloud/`。程式只讀取允許的程式、介面、結構遷移與虛構測試檔案，不複製 `.env`、`.dev.vars`、本機執行狀態、資料、附件或真實部署身份。
+
+正式網站部署及公開存取驗證完成後才發布 GitHub 與 Pages 導向。GitHub 不承擔正式 API 或資料儲存。
+
+### 本機版的自架選項
 
 GitHub Pages 只能提供靜態網頁，無法執行正式系統的登入與資料儲存服務。
 
-正式使用需要 HTTPS 反向代理與可持續儲存資料的 Python 主機。`Dockerfile` 提供部署封裝；設定下列環境變數：
+若另外自架保留的 Python 版本，需要 HTTPS 反向代理與可持續儲存資料的 Python 主機。`Dockerfile` 提供此版本的部署封裝；設定下列環境變數：
 
 | 變數 | 用途 |
 | --- | --- |
@@ -84,7 +111,7 @@ GitHub Pages 只能提供靜態網頁，無法執行正式系統的登入與資�
 
 容器需掛載 `/data` 持久磁碟，不可將私有資料放入映像或 GitHub。`ADMIN_PASSWORD` 設定時，密碼須在主機端更新；登入 Cookie 以 Secure、HttpOnly、SameSite=Strict 保護。
 
-網站在外部主機上執行時，無法直接讀寫使用者 Mac 桌面。若要保持指定的 Mac 資料夾為唯一儲存來源，需要讓 Mac 服務保持運作並搭配 HTTPS 入口；若改用雲端主機，需要另規劃資料搬移與同步。本版本尚未部署，也未建立這種同步。
+目前正式雲端網站搭配上述 Mac 單向同步，不需要對外開放 Mac。這裡的 Python 自架設定與正式 Sites 雲端部署分開。
 
 公開部署時還需要服務的流量限制、資料備份與監控；內建伺服器以本機與小規模使用為範圍。
 
@@ -93,8 +120,12 @@ GitHub Pages 只能提供靜態網頁，無法執行正式系統的登入與資�
 ```sh
 python3 tests/test_app.py
 node tests/test_startup.mjs
+python3 tests/test_cloud_sync.py
+python3 tests/test_mirror_cloud_source.py
+python3 scripts/build_site_redirect.py
+node --test tests/test_site_redirect.mjs
 ```
 
 測試在隔離暫存目錄建立訂單，驗證登入、公私資料隔離、路徑檢查、重複訂單、進度前置條件、附件公開範圍、PI 輸出與待補資料訂單。Excel 範本測試在本機範本設定存在時執行。
 
-本次已通過資料與 API 功能測試。瀏覽器工具的安全政策檢查未能完成，因此本機畫面與行動版仍待人工預覽。
+雲端版本另有 API、文件、範本與部署整合測試，見 `cloud/README.md`。正式部署與私有資料搬移由管理者在受授權的主機環境完成。
