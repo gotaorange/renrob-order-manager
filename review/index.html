@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="Re:Nrob Lab 訂單管理介面預覽，所有內容均為虛構示範資料。">
+  <title>Re:Nrob Lab · 介面預覽</title>
+  <link rel="icon" href="./favicon.svg">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    :root{--preview-height:76px}
+    body{padding-top:var(--preview-height)}
+    .review-banner{position:fixed;inset:0 0 auto;min-height:var(--preview-height);z-index:20;background:#f3f3f3;color:#141414;padding:12px 24px;display:flex;gap:16px;align-items:center;justify-content:space-between;border-bottom:1px solid #d4d4d4}
+    .review-banner strong{display:block;font-size:13px}
+    .review-banner p{font-size:11px;line-height:1.5}
+    .review-banner nav{display:flex;gap:8px;flex-shrink:0}
+    .review-banner a{font-size:11px;border:1px solid #d4d4d4;border-radius:5px;padding:7px 10px;white-space:nowrap}
+    .review-banner a:focus-visible{outline-color:#141414}
+    .sidebar{top:var(--preview-height)}
+    .layout{min-height:calc(100vh - var(--preview-height))}
+    @media(max-width:600px){:root{--preview-height:118px}.review-banner{padding:10px 18px;flex-direction:column;align-items:flex-start;justify-content:center;gap:7px}.review-banner nav{gap:6px}.review-banner a{padding:4px 9px}}
+  </style>
+  <script src="./review.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <aside class="review-banner" aria-label="介面預覽說明">
+    <div><strong>介面預覽 · 全部為虛構示範資料</strong><p>供同事確認版面與流程；不儲存、不上傳、不下載，也不連接真實訂單。</p></div>
+    <nav aria-label="切換預覽範圍"><a href="./">管理介面預覽</a><a href="./?view=factory">灣得唯讀預覽</a></nav>
+  </aside>
+  <div id="app"><div class="loading"><div>Re:Nrob Lab<br><span>正在開啟介面預覽…</span><noscript><p>請啟用 JavaScript 以瀏覽預覽。</p></noscript></div></div></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="modal"></dialog>
+</body>
+</html>

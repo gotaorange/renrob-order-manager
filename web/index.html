@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Re:Nrob Lab 訂單與製作進度管理">
+  <title>Re:Nrob Lab · 訂單管理</title>
+  <link rel="icon" href="./favicon.svg?v=4">
+  <link rel="stylesheet" href="./style.css?v=4">
+  <script src="./startup.js?v=2" defer></script>
+</head>
+<body>
+  <div id="app">
+    <div class="loading" data-startup>
+      <div>Re:Nrob Lab<br><span id="startup-message">正在開啟工作空間…</span>
+        <p style="margin-top:18px;font:12px -apple-system,sans-serif"><a href="" class="btn">重新載入</a> <a href="http://127.0.0.1:8765/" class="btn">開啟本機網站</a></p>
+        <p style="font:12px/1.6 -apple-system,sans-serif;color:#666666">若是直接開啟 HTML 檔案，請改用上方的「開啟本機網站」。</p>
+        <noscript><p style="font:14px sans-serif">請啟用瀏覽器的 JavaScript，再重新載入。</p></noscript>
+      </div>
+    </div>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="modal"></dialog>
+</body>
+</html>

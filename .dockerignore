@@ -1,0 +1,9 @@
+data
+.vendor
+.venv
+.git
+__pycache__
+*.pyc
+.env
+tests
+test-results
